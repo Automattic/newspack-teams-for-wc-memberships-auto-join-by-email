@@ -11,10 +11,13 @@
  * @package Newspack_Teams_For_WC_Memberships_Auto_Join_By_Email
  */
 
+defined( 'ABSPATH' ) || exit;
+
 if ( ! defined( 'NEWSPACK_TEAMS_FOR_WC_MEMBERSHIPS_AUTO_JOIN_BY_EMAIL_FILE' ) ) {
 	define( 'NEWSPACK_TEAMS_FOR_WC_MEMBERSHIPS_AUTO_JOIN_BY_EMAIL_FILE', __FILE__ );
 }
 
 require_once ( dirname( NEWSPACK_TEAMS_FOR_WC_MEMBERSHIPS_AUTO_JOIN_BY_EMAIL_FILE ) . '/plugin/class-plugin.php' );
+require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
 
 \Newspack_Teams_For_WC_Memberships_Auto_Join_By_Email\Plugin::get_instance();
