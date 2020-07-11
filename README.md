@@ -12,6 +12,8 @@ The plugin adds a simple settings Section to the `WooCommerce` > `Settings` > `M
 
 The settings enable defining "Excluded Email Domains". These are email domains are email domains which will get ignored/excluded when checking the new User's email domain. 
 
+Please be extra mindful that by activating this Plugin, all the newly added Users will be automatically added to corresponding Teams, whose Team Owner's email domain matches their email domain. If you would like any of the existing Teams to be excluded from this behavior -- not to automatically grant their Membership to the newly joined Users -- you will need to add that particular Team Owner's email domain to the "Excluded Email Domains" list.  
+
 For example, if there is a Team Membership Owner with the `@gmail.com` email domain, you will almost certainly want to add `gmail.com` to your Excluded Email Domains list, to prevent new Users with `@gmail.com` emails being added to a Team Membership which might have an Owner with a `@gmail.com` email too.
 
 The Excluded Email Domains list supports the use of the `*` qualifier. For example, if you entered these two entries:
