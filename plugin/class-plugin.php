@@ -13,6 +13,11 @@ namespace Newspack_Teams_For_WC_Memberships_Auto_Join_By_Email;
 class Plugin {
 
 	/**
+	 * The ID of the new WooComm section.
+	 */
+	const SETTING_ID = 'wc_team_memberships_auto_join_by_email';
+
+	/**
 	 * @var Plugin|null
 	 */
 	private static $instance;
@@ -58,6 +63,84 @@ class Plugin {
 	private function register_interface() {
 		add_filter( 'woocommerce_get_sections_memberships', [ $this, 'add_section' ] );
 		add_filter( 'woocommerce_get_settings_memberships', [ $this, 'get_settings' ], 10, 2 );
+		add_filter(
+			'woocommerce_admin_settings_sanitize_option_' . self::SETTING_ID,
+			[ $this, 'validate_fields_on_update' ],
+			10,
+			3
+		);
+	}
+
+	/**
+	 * Validation of all the email domains settings before they're saved.
+	 *
+	 * @param string $value     Action param, value.
+	 * @param string $option    Action param, option.
+	 * @param string $raw_value Action param, raw value.
+	 *
+	 * @return null|string The `woocommerce_admin_settings_sanitize_option_[OPTION_NAME]` filter expects $value to be returned
+	 *                     if everything's OK, or if null is returned it skips saving this value.
+	 */
+	public function validate_fields_on_update( $value, $option, $raw_value ) {
+
+		$domains = explode( ',', $value );
+
+		// Nothing to save.
+		if ( empty( $domains) ) {
+			return null;
+		}
+
+		foreach ( $domains as $domain ) {
+
+			if ( ! $this->is_valid_domain_entry( $domain ) ) {
+				\WC_Admin_Settings::add_error(
+					__(
+						'ERROR',
+						'newspack_teams_for_wc_memberships_auto_join_by_email'
+					) .
+					' ' .
+					__(
+						'The value you provided is not a valid entry for an email domain',
+						'newspack_teams_for_wc_memberships_auto_join_by_email'
+					) .
+					': ' . $domain
+				);
+
+				return null;
+			}
+
+		}
+
+		return $value;
+	}
+
+	/**
+	 * Validates an email domain entry.
+	 *
+	 * @param string $domain Email domain entry.
+	 *
+	 * @return bool Is valid entry.
+	 */
+	public function is_valid_domain_entry( $domain ) {
+
+		// Allow the `*` quantifier, but not at the beginning, because that's too dangerous.
+		// This also takes care of the accidental "*" any domain entry.
+		if ( 0 === strpos( $domain, '*' ) ) {
+			return false;
+		}
+
+		// Let's also allow just one "*" per domain.
+		if ( substr_count( $domain, '*' ) > 1 ) {
+			return false;
+		}
+
+		// A simple trick to validate the domain entry -- replace "*" with "com", and then test if that's a valid URL.
+		$domain_replaced = str_replace( '*', 'com', $domain );
+		if ( ! filter_var( 'https://' . $domain_replaced, FILTER_VALIDATE_URL ) ) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -172,7 +255,7 @@ class Plugin {
 	 * @return array
 	 */
 	private function get_excluded_email_domains() {
-		$all_options            = get_option( 'wc_team_memberships_auto_join_by_email', '' );
+		$all_options            = get_option( self::SETTING_ID, '' );
 		$excluded_email_domains = isset( $all_options[ 'excluded_email_domains' ] ) && ! empty( $all_options[ 'excluded_email_domains' ] )
 			? explode( ',', $all_options[ 'excluded_email_domains' ] )
 			: [];
@@ -223,7 +306,7 @@ class Plugin {
 		];
 		$settings_custom[] = [
 			'type'     => 'textarea',
-			'id'       => 'wc_team_memberships_auto_join_by_email[excluded_email_domains]',
+			'id'       => self::SETTING_ID . '[excluded_email_domains]',
 			'class'    => 'input-text wide-input messages-group-posts',
 			'name'     => __(
 				'Excluded email domains',
