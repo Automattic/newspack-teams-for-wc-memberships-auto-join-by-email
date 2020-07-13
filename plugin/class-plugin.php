@@ -100,7 +100,7 @@ class Plugin {
 					) .
 					' ' .
 					__(
-						'The value you provided is not a valid entry for an email domain:',
+						'The value you provided is not a valid entry for an email domain',
 						'newspack_teams_for_wc_memberships_auto_join_by_email'
 					) .
 					': ' . $domain
