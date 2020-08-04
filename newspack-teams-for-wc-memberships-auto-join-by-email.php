@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Newspack Teams for WooCommerce Memberships Auto-Join by Email
  * Description: When a new user registers, the plugin automatically assigns them to corresponding WooComm Team Memberships based on their email domain.
- * Version: 0.1
+ * Version: 0.4
  * Author: Automattic
  * Author URI: https://newspack.blog/
  * License: GPL2

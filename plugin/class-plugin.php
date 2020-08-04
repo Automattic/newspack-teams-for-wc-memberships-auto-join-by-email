@@ -160,11 +160,17 @@ class Plugin {
 		$teams                     = $this->get_all_teams();
 		$current_user_email        = $current_user->user_email;
 		$current_user_email_domain = $this->get_domain_from_email( $current_user_email );
+		if ( false === $current_user_email_domain ) {
+			return;
+		}
 
 		// Compare if any of the Team Membership Owners has the same email domain as this users.
 		foreach ( $teams as $team ) {
 			$team_owner              = $team->get_owner();
 			$team_owner_email_domain = $this->get_domain_from_email( $team_owner->get( 'user_email' ) );
+			if ( false === $team_owner_email_domain ) {
+				continue;
+			}
 
 			// Check if Team Owner's email matches this User's email.
 			if ( strtolower( $team_owner_email_domain ) == strtolower( $current_user_email_domain ) ) {
