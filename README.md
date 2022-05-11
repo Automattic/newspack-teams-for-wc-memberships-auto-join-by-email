@@ -4,7 +4,7 @@ This Plugin is an extension for the [Teams for WooCommerce Memberships](https://
 
 It automatically assigns newly registered Users to existing WooComm Team Memberships based on their email domain.
 
-If a new User has an email with a domain that matches the email domain of an Team Membership Owner, this new User will automatically get assigned to their Team.
+Instead of having to add WP Users to Team Memberships one by one, this plugin enables automatic adding of new WP Users to the corresponding Team Memberships based on their email’s @domain.com. If a new WP User has an email with a domain that matches the email domain of an Team Membership Owner, this new WP User will automatically get assigned to their Team, and therefore get access to that premium content
 
 ## Usage
 
