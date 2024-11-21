@@ -152,6 +152,18 @@ class Plugin {
 	 * @param int $customer_id User ID.
 	 */
 	public function auto_add_user_to_team_by_email( $customer_id ) {
+
+		// Bail if the user is being manually added via the admin.
+		global $action;
+		if (
+			defined('DOING_AJAX')
+			&& DOING_AJAX
+			&& ! empty( $action )
+			&& 'wc_memberships_create_user_for_membership' === $action
+		) {
+			return;
+		}
+
 		$current_user = $customer_id ? get_user_by( 'ID', $customer_id ) : null;
 		if ( ! $current_user ) {
 			return;
